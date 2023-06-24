@@ -1,3 +1,5 @@
 export function onRequest(context) {
-  return new Response(JSON.stringify(context.params.catchall))
+  // JSON.stringify(context.params.catchall)
+  const url = "https://cdn-images-1.medium.com/" + context.params.catchall.jion('/');
+  return new Response(url);
 }
