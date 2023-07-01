@@ -9,7 +9,7 @@ export async function onRequest(context) {  // Contents of context object
   } = context;
   context.request
   const url = new URL(request.url);
-  console.log('request.body :>> ', request.body);
+  console.log('request.headers :>> ', request.headers);
   console.log('url :>> ', url);
 
   const myHeaders = new Headers();
@@ -27,7 +27,8 @@ export async function onRequest(context) {  // Contents of context object
   myHeaders.append("Sec-Fetch-Mode", " cors");
   myHeaders.append("Sec-Fetch-Site", " same-site");
   myHeaders.append("TE", " trailers");
-
+  myHeaders.append("content-length", request.headers.get('content-length'));
+  myHeaders.append("content-type", request.headers.get('content-type'));
   // const formdata = new FormData();
   // formdata.append("", fileInput.files[0], "/H:/发的内容/2022年7月17日/京东快递小哥哥/13302517967235806.jpg");
 
@@ -36,12 +37,13 @@ export async function onRequest(context) {  // Contents of context object
     headers: myHeaders,
     body: request.body
   };
-
+  // console.log('requestOptions :>> ', requestOptions);
   const response = fetch("https://api.huaban.com/upload", requestOptions);
+  return response;
   // const response = fetch('https://telegra.ph/' + url.pathname + url.search, {
   //   method: request.method,
   //   headers: request.headers,
   //   body: request.body,
   // });
-  return response;
+  // return new Response("ok");
 }
