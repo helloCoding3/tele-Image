@@ -1,4 +1,4 @@
-export async function onRequestPost(context) {  // Contents of context object  
+export async function onRequest(context) {  // Contents of context object  
     const {
         request, // same as existing Worker API    
         env, // same as existing Worker API    
@@ -9,10 +9,34 @@ export async function onRequestPost(context) {  // Contents of context object
     } = context;
     context.request
     const url = new URL(request.url);
-    const response = fetch('https://telegra.ph/' + url.pathname + url.search, {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-    });
-    return response;
+    if (request.method == 'POST') {
+        const response = await fetch('https://telegra.ph/' + url.pathname + url.search, {
+            method: request.method,
+            headers: request.headers,
+            body: request.body,
+        });
+        const newresult = await response.text();
+        console.log('newresult :>> ', newresult);
+        return new Response(newresult, {
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Max-Age': '86400',
+            },
+        })
+    }
+    else {
+        return new Response(null, {
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Max-Age': '86400',
+            },
+        })
+    }
+
 }

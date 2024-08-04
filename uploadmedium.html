@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+  <!-- 引入样式文件 -->
+  <link rel="shortcut icon" href="https://assets.vercel.com/image/upload/front/favicon/vercel/57x57.png"
+    type="image/x-icon">
+  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/vant@3/lib/index.css" />
+
+  <style>
+    .outcome {
+      border: 1px solid red;
+    }
+
+    .imgs-code {
+      background-color: pink;
+      width: 50vw;
+
+    }
+
+    .preview-img .img-item {
+      vertical-align: top;
+      height: 15vh;
+    }
+
+    .real-img .img-item {
+      vertical-align: top;
+      height: 30vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <van-row>
+      <van-col span="8"></van-col>
+      <van-col span="8">
+        <h2 style="text-align: center;">欢迎使用medium图片上传API</h2>
+      </van-col>
+      <van-col span="8"></van-col>
+    </van-row>
+
+
+    <van-row>
+      <van-col span="8">
+
+      </van-col>
+      <van-col span="8">
+        <van-uploader :after-read="afterRead" multiple>
+          <van-button icon="plus" type="primary">选择文件</van-button>
+        </van-uploader>
+        <span>&nbsp;</span>
+        <van-button type="success" plain @click="uploadfilesAPI">上传</van-button>
+        <span>&nbsp;</span>
+        <van-button type="warning" @click="clearFile">清空所有内容</van-button>
+      </van-col>
+      <van-col span="8">
+        <span>
+          上传进度：{{networdUrls.length}}/{{imglist.length}}
+          <span v-if="iscomplete">🎉完成🍾</span> </span>
+      </van-col>
+    </van-row>
+    <hr />
+
+    <div class="preview-img">
+      <h3>原始图片：</h3>
+      <img :src="item.url" class="img-item" alt="" v-for="(item, index) in imglist" :key="index">
+    </div>
+
+    <!-- <div>-----👇网络图片address👇----------</div> -->
+    <hr />
+
+    <div class="real-img">
+      <h3>网络图片：</h3>
+      <img :src="item" class="img-item" alt="" v-for="(item, index) in networdUrls" :key="index">
+    </div>
+
+  </div>
+
+
+</body>
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<!-- <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+<!-- 引入 Vue 和 Vant 的 JS 文件 -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vant/3.6.11/vant.min.js"
+  integrity="sha512-ykjg4HKtJ7qpCHUi3IsPQrgd4oHRnBN0BwubTScLlZFSxb4dtICGrvruyu9kE37p2FoM4+5dwrH60nwDlGw8Jg=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+
+</script>
+
+<script>
+  // 在 #app 标签下渲染一个按钮组件
+  const app = Vue.createApp({
+    data() {
+      return {
+        imglist: [],
+        networdUrls: [],
+
+      }
+    },
+    computed: {
+      iscomplete() {
+        return (this.networdUrls.length === this.imglist.length) && (this.networdUrls.length !== 0) && (this.imglist.length !== 0)
+      }
+    },
+    methods: {
+      // 读取文件
+      afterRead(file) {
+        // console.log(file);
+
+        if (file instanceof Array) {
+          const newlist = file.map(item => {
+            return { url: item.content, imgfile: item.file };
+          })
+          this.imglist.push(...newlist)
+        } else {
+          this.imglist.push({ url: file.content, imgfile: file.file })
+        }
+      },
+      // 上传文件
+      async uploadfilesAPI() {
+        const imgNetWorkUrl = new Array(this.imglist.length).fill(false);
+        let index = 0;
+        // await this.submitdata(this.imglist[index].imgfile, index);
+
+        while (true) {
+          if (!imgNetWorkUrl.includes(false)) {
+            break;
+            this.iscomplete = true;
+          }
+          const file = this.imglist[index];
+          const num = Number.parseInt(index);
+          // console.log(file.imgfile, num);
+          let res = await this.submitdata(file.imgfile, num);
+
+          // 上传失败，重新上上传
+          if (res !== undefined) {
+            imgNetWorkUrl[num] = { num, res };
+            const src = imgNetWorkUrl[num].res[0].src;
+            let myproxySrc = "https://imageproxy2.pages.dev/newproxy?url=" + src;
+            this.networdUrls.push(myproxySrc);
+            index++;
+          }
+
+        }
+
+        console.log('this.networdUrls :>> ', this.networdUrls);
+
+      },
+
+      // 清空所有内容
+      async clearFile() {
+        this.imglist = [];
+        this.networdUrls = [];
+        console.clear();
+      },
+
+      // 提交内容到上传接口
+      async submitdata(file, num) {
+        try {
+          const formData = new FormData();
+          formData.append("image", file);
+          const options = {
+            type: "POST",
+            dataType: "json",
+            // url: "https://telegraph-api.yunimg.cc/",
+            url: "https://imageproxy2.pages.dev/mediumupload",
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            "mimeType": "multipart/form-data",
+            timeout: 10000,
+          };
+          const result = await $.ajax({
+            ...options,
+            success: function (responsedata) {
+              console.log(`-----第${num}张图片上传✔----`);
+              // console.log(result.data.url);
+              // const res = [{ "src": responsedata.data.url }]
+              // return result;
+              console.log('responsedata :>> ', responsedata);
+              // return Promise.resolve("这是设置的返回内容");
+              // return "success";
+            },
+            error: function (err) {
+              // console.log(`---第${num}张图片发生了❌----`);
+              // console.log(err);
+              // 错误了，把文件传回来
+              // return Promise.reject(file)
+              return Promise.reject({
+                num,
+                msg: `第${num}张图片上传❌`,
+                file
+              })
+              console.clear();
+            }
+          });
+
+          return [{ "src": result.data.url }];
+        } catch (error) {
+        }
+
+      }
+    },
+  });
+
+  app.use(vant);
+  app.use(vant.Lazyload);
+  app.mount('#app');
+</script>
+
+
+</html>

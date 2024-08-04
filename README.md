@@ -137,3 +137,4 @@ Cloudflare KV每天只有1000次的免费写入额度，每有一张新的图片
 This project is tested with BrowserStack.
 
 This project is support by [Cloudflare](https://www.cloudflare.com/).
+"# imageproxy2" 

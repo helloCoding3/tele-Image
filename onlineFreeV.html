@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>onlineFreeV</title>
+  <link rel="icon" type="image/svg+xml" href="https://cdn-icons-png.flaticon.com/512/4406/4406121.png" />
+  <!-- <script src="https://unpkg.com/react@18/umd/react.development.js"></script> -->
+  <script src="./js/react.development.js"></script>
+
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/react/18.2.0/cjs/react.development.js"></script> -->
+  <!-- <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> -->
+  <script src="./js/react-dom.development.js"></script>
+
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/react-dom/18.2.0/cjs/react-dom.development.js"></script> -->
+
+  <!-- <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> -->
+  <script src="./js/babel.min.js"></script>
+  <style>
+    body {
+      margin: 0 auto;
+
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    table {
+      border: 1px solid red;
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    th,
+    td {
+      text-align: center;
+      border: 1px solid pink;
+
+    }
+
+    @media all and (min-width:800px) {
+      table {
+        border: 1px solid blue;
+        width: 35vw;
+      }
+
+      th,
+      td {
+        text-align: center;
+        border: 1px solid cornflowerblue;
+      }
+    }
+
+    .img-td {
+      width: 40%;
+    }
+
+    .img-td>img {
+      width: 100%;
+      vertical-align: top;
+    }
+
+    .inputbox {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .getcontent {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    // async function getdata() {
+    //   const result = await fetch("https://www.endserver.top/api/proxyserver?url=https://imgurlstore.pages.dev/public/v202406061706.json");
+    //   const txt = await result.text();
+    //   console.log('txt :>> ', txt);
+    // }
+  </script>
+  <script type="text/babel">
+    function MyApp() {
+      const [datas, setDatas] = React.useState([]);
+
+      const [inputValue, setInputValue] = React.useState('');
+      // React.useEffect(() => {
+      //   async function fetchData() {
+      //     const result = await fetch("https://www.endserver.top/api/proxyserver?url=https://imgurlstore.pages.dev/public/v202406061706.json");
+      //     const txt = await result.text();
+      //     // console.log('txt :>> ', txt);
+      //     setDatas(JSON.parse(txt));
+      //   }
+      //   // fetchData();
+      // }, []);
+      async function fetchData() {
+        console.log('inputValue :>> ', inputValue);
+        const urltag = inputValue;
+        const result = await fetch(`https://www.endserver.top/api/proxyserver?url=https://imgurlstore.pages.dev/public/${urltag}.json`);
+        const txt = await result.text();
+        // console.log('txt :>> ', txt);
+        setDatas(JSON.parse(txt));
+      }
+      const list = datas;
+      const trlist = list.map(
+        (item, index) => {
+          // let playAdd = /m3u8/.test(item.playurl) ? 'https://sljxsl.com/?url=' + item.playurl : item.playurl;
+          // const proyxadd = "https://www.imgproxyservers3.sbs/newproxy?url=";
+          const proyxadd = "https://imageproxy2.pages.dev/newproxy?url=";
+
+
+          // let playAdd = "https://hellocoding3.github.io/myArtPlayer/?url=" + proyxadd + item.playurl;
+          // let playAdd = "https://www.happywebsite.buzz/artplayer.html?url="+ proyxadd + item.playurl;
+          let playAdd = "https://happywebsite.pages.dev/artplayer?url=" + proyxadd + item.playurl;
+          // let playAdd = "https://happyoriginv.netlify.app/artplayer?url="+ proyxadd + item.playurl;
+
+          // let playAdd = "https://www.imgproxyservers3.sbs/?url=" + proyxadd + item.playurl;
+          return (
+            <tr key={index}>
+              <td className="img-td">
+                <img src={proyxadd + item.pic} alt="" referrerPolicy="no-referrer" />
+              </td>
+              <td>
+                <a href={playAdd} target="_blank">{item.name}</a>
+              </td>
+            </tr >
+          )
+        }
+      )
+
+      return (
+        <>
+          <h2 className="title">VIDEO            ▶</h2 >
+          <div className="inputbox">
+            <div>
+              <input type="text" value={inputValue} onChange={e => {
+                setInputValue(e.target.value);
+              }}></input>
+              <button className="getcontent" ata-auto-clear-button="true"
+                onClick={() => { fetchData() }}
+              >
+                获取内容</button>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>预览图</th>
+                <th>地址[点击即看]</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trlist}
+            </tbody>
+          </table>
+        </>
+      );
+    }
+
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(
+      <>
+        <MyApp />
+      </>);
+
+  </script>
+</body>
+
+</html>
+
+<!-- 
+
+          // <tr>
+          //   <td className="img-td">
+          //     <img src="https://images.cm.jstv.com/169620678263389293.jpg" alt="" />
+          //   </td>
+          //   <td>
+          //     <a href="https://videos.cm.jstv.com/169620678263389293.mp4" target="_blank">地址</a>
+          //   </td>
+          // </tr>
+          // <tr>
+          //   <td className="img-td">
+          //     <img src="https://images.cm.jstv.com/169622937175921985.jpg" alt="" />
+          //   </td>
+          //   <td>
+          //     <a href="https://videos.cm.jstv.com/169622937175921985.mp4" target="_blank">地址</a>
+          //   </td>
+          // </tr>
+ -->
