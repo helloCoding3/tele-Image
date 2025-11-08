@@ -12,11 +12,11 @@ export async function onRequest(context) {  // Contents of context object
   // console.log('request.headers :>> ', request.headers);
   // console.log('url :>> ', url);
 
-  const cookieresponse = await fetch("https://dev.usemock.com/65a3f1966330cd8519c82fc1/qiyeweixindoc/key")
+  const cookieresponse = await fetch("https://videourlplay.pages.dev/data/workwxdoc_info.json")
   const result = await cookieresponse.text();
   console.log('获取企业微信token情况 :>> ', result);
   const jsonres = JSON.parse(result);
-  const coo = jsonres['Cookie'];
+  const coo = jsonres[0]['data']['Cookie'];
   //   const re = /(wedrive_uin=)(.){17}/ig;
   const wedrive_uin = coo.match(/(wedrive_uin=)(.){17}/ig);
   const wedrive_sid = coo.match(/(wedrive_sid=)(.){24}/ig);
@@ -27,18 +27,18 @@ export async function onRequest(context) {  // Contents of context object
   console.log('\n newcookie :>> ', newcookie);
   if (request.method == 'POST') {
     var myHeaders = new Headers();
-    myHeaders.append("Host", " doc.weixin.qq.com");
-    myHeaders.append("User-Agent", " Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0");
-    myHeaders.append("Accept", " */*");
-    myHeaders.append("Accept-Language", " zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
-    myHeaders.append("Accept-Encoding", " gzip, deflate, br");
-    myHeaders.append("Referer", " https://doc.weixin.qq.com/");
-    myHeaders.append("Origin", " https://doc.weixin.qq.com");
-    myHeaders.append("Connection", " keep-alive");
-    myHeaders.append("Sec-Fetch-Dest", " empty");
-    myHeaders.append("Sec-Fetch-Mode", " cors");
-    myHeaders.append("Sec-Fetch-Site", " same-origin");
-    myHeaders.append("TE", " trailers");
+    myHeaders.append("Host", "doc.weixin.qq.com");
+    myHeaders.append("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Accept-Language", "en-US,en;q=0.9,fr-FR;q=0.8,de-DE;q=0.7,es-ES;q=0.6,zh-CN;q=0.5,zh;q=0.4");
+    myHeaders.append("Accept-Encoding", "gzip, deflate, br");
+    myHeaders.append("Referer", "https://doc.weixin.qq.com/");
+    myHeaders.append("Origin", "https://doc.weixin.qq.com");
+    myHeaders.append("Connection", "keep-alive");
+    myHeaders.append("Sec-Fetch-Dest", "empty");
+    myHeaders.append("Sec-Fetch-Mode", "cors");
+    myHeaders.append("Sec-Fetch-Site", "same-origin");
+    myHeaders.append("TE", "trailers");
 
 
     myHeaders.append("content-length", request.headers.get('content-length'));
