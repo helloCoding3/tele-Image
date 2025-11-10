@@ -13,10 +13,10 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   console.log("request :>> ", request.method);
   // console.log('url :>> ', url);
-
+  const HOST = "videobox.pages.dev";
   if (request.method == "POST") {
     const body = await request.arrayBuffer(); // 保留原始上传内容
-    const remoteurl = "https://imageproxy3.pages.dev/realmeupload";
+    const remoteurl = `https://${HOST}/realmeupload`;
 
     const myHeaders = new Headers();
     myHeaders.append(
@@ -69,7 +69,7 @@ export async function onRequest(context) {
   if (request.method == "PUT") {
     const body = await request.arrayBuffer();
     const proxyUrl =
-      "https://imageproxy3.pages.dev/proxydigitalocean" + functionPath + url.search;
+      `https://${HOST}/proxydigitalocean` + functionPath + url.search;
     const targetUrl = proxyUrl.replace("/getrealmeuploadcf", "");
     console.log("targetUrl :>> ", targetUrl);
     const myHeaders = new Headers();
